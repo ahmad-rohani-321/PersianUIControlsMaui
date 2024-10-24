@@ -31,7 +31,7 @@
                                 <pui:CircleImageView ImageSource="dotnet_bot.svg" Margin="25,25,25,0" ImageHeight="96" ImageWidth="96" BorderThickness="2" BorderColor="BlueViolet" VerticalOptions="Center" HorizontalOptions="Center"/>
                             </VerticalStackLayout>
                             <Grid RowDefinitions="Auto,Auto,Auto">
-                                <pui:DatePicker PlaceHolder="تاریخ" DisplayFormat="yyyy/MM/dd" Icon="&#xf073;" />
+                                <pui:DatePicker PlaceHolder="تاریخ" DisplayFormat="yyyy/MM/dd" Icon="&#xf073;" SelectedPersianDate="" />
 
                                 <pui:DatePicker PlaceHolder="بازه تاریخی" SelectedPersianDate="{Binding PersianDateRange}" CalendarOption="{Binding RangeCalendarOption}" DisplayFormat="yyyy/MM/dd" OnChangeDateCommand="{Binding OnChangeDateCommand}" Icon="&#xf073;" BadgeDates="{Binding BadgeDates}" Grid.Row="1"/>
 

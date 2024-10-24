@@ -37,9 +37,6 @@ jobs:
 
     - name: List packed packages
       run: dir .\nupkgs
-      
-    - name: List packed packages
-      run: dir .\nupkgs
 
     - name: Publish to NuGet
       shell: pwsh

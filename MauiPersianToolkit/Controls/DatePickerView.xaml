@@ -125,11 +125,12 @@
                                     <Setter Property="IsEnabled" Value="True"/>
                                 </DataTrigger>
                                 <DataTrigger TargetType="Button" Binding="{Binding IsSelected}" Value="False">
+                                    <Setter Property="TextColor" Value="#333"/>
                                     <Setter Property="Background" Value="White"/>
                                 </DataTrigger>
-                                <DataTrigger TargetType="Button" Binding="{Binding IsInRange}" Value="True">
-                                    <Setter Property="Background" Value="{Binding Options.InRangeDayColor,Source={RelativeSource AncestorType={x:Type vm:DatePickerViewModel}}}"/>
-                                    <Setter Property="TextColor" Value="{Binding Options.SelectDayColor,Source={RelativeSource AncestorType={x:Type vm:DatePickerViewModel}}}"/>
+                                <DataTrigger TargetType="Button" Binding="{Binding IsInRange,Mode=OneWay}" Value="True">
+                                    <Setter Property="Background" Value="{Binding Options.InRangeDayColor,Mode=OneWay,Source={RelativeSource AncestorType={x:Type vm:DatePickerViewModel}}, FallbackValue='#333'}"/>
+                                    <Setter Property="TextColor" Value="{Binding Options.SelectDayColor,Mode=OneWay,Source={RelativeSource AncestorType={x:Type vm:DatePickerViewModel}},FallbackValue='White'}"/>
                                 </DataTrigger>
                                 <DataTrigger TargetType="Button" Binding="{Binding IsInRange}" Value="False">
                                     <Setter Property="Background" Value="White"/>
@@ -137,12 +138,12 @@
                                 <DataTrigger TargetType="Button" Binding="{Binding IsHoliday}" Value="True">
                                     <Setter Property="TextColor" Value="Red"/>
                                 </DataTrigger>
-                                <DataTrigger TargetType="Button" Binding="{Binding IsSelected}" Value="True">
-                                    <Setter Property="Background" Value="{Binding Options.SelectDayColor,Source={RelativeSource AncestorType={x:Type vm:DatePickerViewModel}}}"/>
+                                <DataTrigger TargetType="Button" Binding="{Binding IsSelected,Mode=OneWay}" Value="True">
+                                    <Setter Property="Background" Value="{Binding Options.SelectDayColor,Mode=OneWay,Source={RelativeSource AncestorType={x:Type vm:DatePickerViewModel}},FallbackValue='#333'}"/>
                                     <Setter Property="TextColor" Value="White"/>
                                 </DataTrigger>
-                                <DataTrigger TargetType="Button" Binding="{Binding IsToday}" Value="True">
-                                    <Setter Property="BorderColor" Value="{Binding Options.SelectDayColor,Source={RelativeSource AncestorType={x:Type vm:DatePickerViewModel}}}"/>
+                                <DataTrigger TargetType="Button" Binding="{Binding IsToday,Mode=OneWay}" Value="True">
+                                    <Setter Property="BorderColor" Value="{Binding Options.SelectDayColor,Mode=OneWay,Source={RelativeSource AncestorType={x:Type vm:DatePickerViewModel}},FallbackValue='#333'}"/>
                                     <Setter Property="BorderWidth" Value="1"/>
                                 </DataTrigger>
                                 <DataTrigger TargetType="Button" Binding="{Binding IsToday}" Value="False">
