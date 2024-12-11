@@ -12,6 +12,7 @@ namespace MauiPersianToolkit.Models
         private DateTime? minDateCanSelect;
         private DateTime? maxDateCanSelect;
         private bool canSelectHolidays;
+        private List<DateTime> inactiveDays;
         private Color selectDayColor;
         private bool autoCloseAfterSelectDate;
 
@@ -22,6 +23,7 @@ namespace MauiPersianToolkit.Models
             selectedPersianDate = DateTime.Now.ToPersianDate();
             selectedPersianDates = new List<string>();
             canSelectHolidays = true;
+            inactiveDays = new List<DateTime>();
             selectDayColor = Colors.DeepSkyBlue;
             autoCloseAfterSelectDate = true;
         }
@@ -59,6 +61,8 @@ namespace MauiPersianToolkit.Models
         /// default is true
         /// </summary>
         public bool CanSelectHolidays { get => canSelectHolidays; set => SetProperty(ref canSelectHolidays, value); }
+
+        public List<DateTime> InactiveDays { get => inactiveDays; set => SetProperty(ref inactiveDays, value); }
 
         /// <summary>
         /// default is DeepSkyBlue

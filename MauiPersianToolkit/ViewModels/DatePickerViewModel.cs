@@ -207,15 +207,15 @@ public class DatePickerViewModel : ObservableObject
         if (SelectedDays.Any())
         {
             var selectedDate = DaysOfMonth.FirstOrDefault(x => x.PersianDateNo == dayOfMonth.PersianDateNo);
-            {
-                selectedDate.IsSelected = selectedDate.PersianDate == dayOfMonth.PersianDate;
+            selectedDate.IsSelected = selectedDate.PersianDate == dayOfMonth.PersianDate && GetCanSelect(selectedDate.GregorianDate, selectedDate.GregorianDate);
 
-                if (selectedDate.IsSelected)
-                    SelectedDays.Add(selectedDate);
+            if (selectedDate.IsSelected)
+            {
+                SelectedDays.Add(selectedDate);
+                DaysOfMonth.Where(x => x.PersianDateNo > SelectedDays.FirstOrDefault().PersianDateNo
+                                        && x.PersianDateNo < SelectedDays.LastOrDefault().PersianDateNo).ToList()
+                            .ForEach(x => x.IsInRange = true);
             }
-            DaysOfMonth.Where(x => x.PersianDateNo > SelectedDays.FirstOrDefault().PersianDateNo
-                                    && x.PersianDateNo < SelectedDays.LastOrDefault().PersianDateNo).ToList()
-                        .ForEach(x => x.IsInRange = true);
         }
 
         if (!SelectedDays.Any())
@@ -247,12 +247,20 @@ public class DatePickerViewModel : ObservableObject
         }
     }
 
-    private bool GetCanSelect(DateTime currentDate)
+    private bool GetCanSelect(DateTime currentDate, DateTime? choosedDate = null)
     {
         bool isHoliday = currentDate.GetPersianDay() == DayOfWeek.Friday;
+
+        bool isInactivedaysRange = choosedDate is not null &&
+            Options.SelectionMode == Enums.SelectionMode.Range && SelectedDays.FirstOrDefault() is DayOfMonth firstDay
+            && firstDay.GregorianDate.Date <= Options.InactiveDays.Max(x => x.Date)
+            && currentDate.Date >= Options.InactiveDays.Min(x => x.Date)
+            && Options.InactiveDays.Exists(x => x.Date >= firstDay.GregorianDate.Date && x.Date <= currentDate);
+
         return (currentDate >= Options.MinDateCanSelect || Options.MinDateCanSelect is null)
                 && (currentDate <= Options.MaxDateCanSelect || Options.MaxDateCanSelect is null)
-                && (!isHoliday || Options.CanSelectHolidays);
+                && (!isHoliday || Options.CanSelectHolidays) && !isInactivedaysRange
+                && !Options.InactiveDays.Exists(x => x.Date == currentDate);
     }
 
     private bool GetIsSelected(DateTime currentDate, DateTime date)
@@ -331,7 +339,7 @@ public class DatePickerViewModel : ObservableObject
     private DateTime GetSelectedDate()
     {
         DateTime date = DateTime.Now;
-        if (DaysOfMonth.Any(x => x.IsSelected))
+        if (DaysOfMonth.Exists(x => x.IsSelected))
             date = DaysOfMonth.FirstOrDefault(x => x.IsSelected).GregorianDate;
         else
             date = DaysOfMonth.Skip(DaysOfMonth.Count / 2).Take(1).FirstOrDefault().GregorianDate;

@@ -76,6 +76,14 @@ namespace PersianUISamples.ViewModels
                 AutoCloseAfterSelectDate = false,
                 OnAccept = OnAcceptDate,
                 OnCancel = new Action(() => { }),
+                MinDateCanSelect = DateTime.Now.Date,
+                InactiveDays =
+                [
+                    DateTime.Now.AddDays(2),
+                    DateTime.Now.AddDays(5),
+                    DateTime.Now.AddDays(7),
+                    DateTime.Now.AddDays(8)
+                ],
                 CanSelectHolidays = true
             };
             MultipleCalendarOption = new CalendarOptions()
@@ -86,6 +94,14 @@ namespace PersianUISamples.ViewModels
                 AutoCloseAfterSelectDate = false,
                 OnAccept = OnAcceptDateMultiple,
                 OnCancel = new Action(() => { }),
+                MinDateCanSelect = DateTime.Now.Date,
+                InactiveDays =
+                [
+                    DateTime.Now.AddDays(2),
+                    DateTime.Now.AddDays(5),
+                    DateTime.Now.AddDays(7),
+                    DateTime.Now.AddDays(8)
+                ],
                 CanSelectHolidays = true
             };
             PickerMultipleItems = new ObservableCollection<PickerItem>

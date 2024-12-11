@@ -116,6 +116,10 @@
                     <DataTemplate x:DataType="models:DayOfMonth">
                         <Button Padding="5,3" Text="{Binding DayNum}" WidthRequest="36" HeightRequest="36" HorizontalOptions="Center" VerticalOptions="Center" CommandParameter="{Binding .}" Clicked="btnDay_Clicked" FontFamily="IranianSans" IsVisible="{Binding IsInCurrentMonth}" BackgroundColor="White" FontAutoScalingEnabled="True" CornerRadius="7" Margin="0,2,0,0">
                             <Button.Triggers>
+                                <DataTrigger TargetType="Button" Binding="{Binding IsSelected}" Value="False">
+                                    <Setter Property="TextColor" Value="#333"/>
+                                    <Setter Property="Background" Value="White"/>
+                                </DataTrigger>
                                 <DataTrigger TargetType="Button" Binding="{Binding CanSelect}" Value="False">
                                     <Setter Property="TextColor" Value="#999"/>
                                     <Setter Property="IsEnabled" Value="False"/>
@@ -123,10 +127,6 @@
                                 <DataTrigger TargetType="Button" Binding="{Binding CanSelect}" Value="True">
                                     <Setter Property="TextColor" Value="#333"/>
                                     <Setter Property="IsEnabled" Value="True"/>
-                                </DataTrigger>
-                                <DataTrigger TargetType="Button" Binding="{Binding IsSelected}" Value="False">
-                                    <Setter Property="TextColor" Value="#333"/>
-                                    <Setter Property="Background" Value="White"/>
                                 </DataTrigger>
                                 <DataTrigger TargetType="Button" Binding="{Binding IsInRange,Mode=OneWay}" Value="True">
                                     <Setter Property="Background" Value="{Binding Options.InRangeDayColor,Mode=OneWay,Source={RelativeSource AncestorType={x:Type vm:DatePickerViewModel}}, FallbackValue='#333'}"/>
