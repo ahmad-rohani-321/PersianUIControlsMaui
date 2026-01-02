@@ -2,8 +2,9 @@ using MauiPersianToolkit.Enums;
 using MauiPersianToolkit.Models;
 using MauiPersianToolkit.Services.Calendar;
 using MauiPersianToolkit.ViewModels;
+using Xunit;
 
-namespace MauiPersianToolkit.Tests;
+namespace MauiPersianToolkit.Test;
 
 /// <summary>
 /// Test cases for calendar services with different calendar types
@@ -17,6 +18,7 @@ public class CalendarServiceTests
     /// <summary>
     /// Test date conversion roundtrip (DateTime -> String -> DateTime)
     /// </summary>
+    [Fact]
     public void TestDateConversionRoundtrip()
     {
         var testDate = new DateTime(2024, 8, 15);
@@ -24,22 +26,23 @@ public class CalendarServiceTests
         // Persian
         var persianStr = _persianService.ToCalendarDate(testDate);
         var persianConverted = _persianService.ToGregorianDate(persianStr);
-        Assert.AreEqual(testDate.Date, persianConverted.Date);
+        Assert.Equal(testDate.Date, persianConverted.Date);
 
         // Gregorian
         var gregorianStr = _gregorianService.ToCalendarDate(testDate);
         var gregorianConverted = _gregorianService.ToGregorianDate(gregorianStr);
-        Assert.AreEqual(testDate.Date, gregorianConverted.Date);
+        Assert.Equal(testDate.Date, gregorianConverted.Date);
 
         // Hijri
         var hijriStr = _hijriService.ToCalendarDate(testDate);
         var hijriConverted = _hijriService.ToGregorianDate(hijriStr);
-        Assert.AreEqual(testDate.Date, hijriConverted.Date);
+        Assert.Equal(testDate.Date, hijriConverted.Date);
     }
 
     /// <summary>
     /// Test month boundaries
     /// </summary>
+    [Fact]
     public void TestMonthBoundaries()
     {
         var testDate = new DateTime(2024, 8, 15);
@@ -47,61 +50,64 @@ public class CalendarServiceTests
         // Persian
         var persianStart = _persianService.GetMonthBeginning(testDate);
         var persianEnd = _persianService.GetMonthEnding(testDate);
-        Assert.IsNotNull(persianStart);
-        Assert.IsNotNull(persianEnd);
+        Assert.NotEmpty(persianStart);
+        Assert.NotEmpty(persianEnd);
 
         // Gregorian
         var gregorianStart = _gregorianService.GetMonthBeginning(testDate);
         var gregorianEnd = _gregorianService.GetMonthEnding(testDate);
-        Assert.IsNotNull(gregorianStart);
-        Assert.IsNotNull(gregorianEnd);
+        Assert.NotEmpty(gregorianStart);
+        Assert.NotEmpty(gregorianEnd);
 
         // Hijri
         var hijriStart = _hijriService.GetMonthBeginning(testDate);
         var hijriEnd = _hijriService.GetMonthEnding(testDate);
-        Assert.IsNotNull(hijriStart);
-        Assert.IsNotNull(hijriEnd);
+        Assert.NotEmpty(hijriStart);
+        Assert.NotEmpty(hijriEnd);
     }
 
     /// <summary>
     /// Test holiday detection
     /// </summary>
+    [Fact]
     public void TestHolidayDetection()
     {
         // Persian calendar: Friday
         var persianHoliday = _persianService.GetLastDayOfWeek();
-        Assert.AreEqual(DayOfWeek.Friday, persianHoliday);
+        Assert.Equal(DayOfWeek.Friday, persianHoliday);
 
-        // Gregorian calendar: Sunday
+        // Gregorian calendar: Saturday
         var gregorianHoliday = _gregorianService.GetLastDayOfWeek();
-        Assert.AreEqual(DayOfWeek.Sunday, gregorianHoliday);
+        Assert.Equal(DayOfWeek.Saturday, gregorianHoliday);
 
         // Hijri calendar: Friday
         var hijriHoliday = _hijriService.GetLastDayOfWeek();
-        Assert.AreEqual(DayOfWeek.Friday, hijriHoliday);
+        Assert.Equal(DayOfWeek.Friday, hijriHoliday);
     }
 
     /// <summary>
     /// Test month names
     /// </summary>
+    [Fact]
     public void TestMonthNames()
     {
         // Persian
         var persianMonths = _persianService.GetAllMonthNames();
-        Assert.AreEqual(12, persianMonths.Count());
+        Assert.Equal(12, persianMonths.Count());
 
         // Gregorian
         var gregorianMonths = _gregorianService.GetAllMonthNames();
-        Assert.AreEqual(12, gregorianMonths.Count());
+        Assert.Equal(12, gregorianMonths.Count());
 
         // Hijri
         var hijriMonths = _hijriService.GetAllMonthNames();
-        Assert.AreEqual(12, hijriMonths.Count());
+        Assert.Equal(12, hijriMonths.Count());
     }
 
     /// <summary>
     /// Test leap year
     /// </summary>
+    [Fact]
     public void TestLeapYear()
     {
         // Persian calendar leap years
@@ -109,7 +115,7 @@ public class CalendarServiceTests
         
         // Gregorian calendar leap year
         var gregorianLeap = _gregorianService.IsLeapYear(2024);
-        Assert.IsTrue(gregorianLeap);
+        Assert.True(gregorianLeap);
 
         // Hijri calendar leap year
         var hijriLeap = _hijriService.IsLeapYear(1446);
@@ -118,6 +124,7 @@ public class CalendarServiceTests
     /// <summary>
     /// Test DatePickerViewModel with different calendar types
     /// </summary>
+    [Fact]
     public void TestDatePickerViewModelWithDifferentCalendars()
     {
         // Persian DatePicker
@@ -126,8 +133,8 @@ public class CalendarServiceTests
             CalendarType = CalendarType.Persian 
         };
         var persianViewModel = new DatePickerViewModel(persianOptions);
-        Assert.IsNotNull(persianViewModel.CurrentMonth);
-        Assert.IsGreater(persianViewModel.CurrentYear, 1000);
+        Assert.NotEmpty(persianViewModel.CurrentMonth);
+        Assert.True(persianViewModel.CurrentYear > 1000);
 
         // Gregorian DatePicker
         var gregorianOptions = new CalendarOptions 
@@ -135,8 +142,8 @@ public class CalendarServiceTests
             CalendarType = CalendarType.Gregorian 
         };
         var gregorianViewModel = new DatePickerViewModel(gregorianOptions);
-        Assert.IsNotNull(gregorianViewModel.CurrentMonth);
-        Assert.IsGreater(gregorianViewModel.CurrentYear, 2000);
+        Assert.NotEmpty(gregorianViewModel.CurrentMonth);
+        Assert.True(gregorianViewModel.CurrentYear > 2000);
 
         // Hijri DatePicker
         var hijriOptions = new CalendarOptions 
@@ -144,58 +151,31 @@ public class CalendarServiceTests
             CalendarType = CalendarType.Hijri 
         };
         var hijriViewModel = new DatePickerViewModel(hijriOptions);
-        Assert.IsNotNull(hijriViewModel.CurrentMonth);
-        Assert.IsGreater(hijriViewModel.CurrentYear, 1000);
+        Assert.NotEmpty(hijriViewModel.CurrentMonth);
+        Assert.True(hijriViewModel.CurrentYear > 1000);
     }
 
     /// <summary>
     /// Test date formatting with different calendars
     /// </summary>
+    [Fact]
     public void TestDateFormatting()
     {
         var testDate = new DateTime(2024, 8, 15);
 
         // Persian
         var persianDate = _persianService.ToCalendarDate(testDate);
-        Assert.IsTrue(persianDate.Contains("/"));
-        Assert.AreEqual(3, persianDate.Split('/').Length);
+        Assert.Contains("/", persianDate);
+        Assert.Equal(3, persianDate.Split('/').Length);
 
         // Gregorian
         var gregorianDate = _gregorianService.ToCalendarDate(testDate);
-        Assert.IsTrue(gregorianDate.Contains("/"));
-        Assert.AreEqual(3, gregorianDate.Split('/').Length);
+        Assert.Contains("/", gregorianDate);
+        Assert.Equal(3, gregorianDate.Split('/').Length);
 
         // Hijri
         var hijriDate = _hijriService.ToCalendarDate(testDate);
-        Assert.IsTrue(hijriDate.Contains("/"));
-        Assert.AreEqual(3, hijriDate.Split('/').Length);
-    }
-}
-
-// Simple Assert helper (replace with your test framework)
-internal static class Assert
-{
-    public static void AreEqual<T>(T expected, T actual)
-    {
-        if (!Equals(expected, actual))
-            throw new Exception($"Expected {expected}, but got {actual}");
-    }
-
-    public static void IsNotNull(object obj)
-    {
-        if (obj == null)
-            throw new Exception("Expected non-null object");
-    }
-
-    public static void IsTrue(bool condition)
-    {
-        if (!condition)
-            throw new Exception("Expected true condition");
-    }
-
-    public static void IsGreater(int actual, int expectedMin)
-    {
-        if (actual <= expectedMin)
-            throw new Exception($"Expected {actual} > {expectedMin}");
+        Assert.Contains("/", hijriDate);
+        Assert.Equal(3, hijriDate.Split('/').Length);
     }
 }
