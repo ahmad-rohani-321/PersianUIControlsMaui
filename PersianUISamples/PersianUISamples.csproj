@@ -88,4 +88,10 @@
     <ProjectReference Include="..\MauiPersianToolkit\MauiPersianToolkit.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <MauiXaml Update="Pages\DatePickerPage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </MauiXaml>
+  </ItemGroup>
+
 </Project>

@@ -3,7 +3,8 @@ using System.Runtime.CompilerServices;
 
 namespace MauiPersianToolkit.ViewModels;
 
-public class ObservableObject : INotifyPropertyChanged
+// Marking the class as partial to address CsWinRT1028 diagnostic
+public partial class ObservableObject : INotifyPropertyChanged
 {
     public event PropertyChangedEventHandler PropertyChanged;
 
