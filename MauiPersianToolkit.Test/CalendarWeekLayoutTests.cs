@@ -50,5 +50,28 @@ public class CalendarWeekLayoutTests
         Assert.Equal(thirdDayIndex, secondDayIndex + 1);
     }
 
-    
+    /// <summary>
+    /// Test that all days of month are consecutive in the grid
+    /// </summary>
+    [Fact]
+    public void TestAllDaysAreConsecutive()
+    {
+        var testDate = new DateTime(2024, 8, 15);
+
+        var options = new CalendarOptions
+        {
+            CalendarType = CalendarType.Gregorian
+        };
+
+        var viewModel = new DatePickerViewModel(options);
+
+        var currentMonthDays = viewModel.DaysOfMonth.Where(d => d.IsInCurrentMonth).ToList();
+
+        // Check that days are numbered 1, 2, 3, ..., lastDay
+        for (int i = 0; i < currentMonthDays.Count; i++)
+        {
+            Assert.Equal(i + 1, currentMonthDays[i].DayNum);
+        }
+    }
+
 }
