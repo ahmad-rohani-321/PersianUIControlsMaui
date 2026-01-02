@@ -30,11 +30,11 @@ jobs:
     - name: Restore dependencies
       run: dotnet restore
     
-    - name: Restore with RuntimeIdentifier
-      run: dotnet restore -r win-x64
+    - name: Restore workloads
+      run: dotnet workload restore
 
     - name: Build Library
-      run: dotnet build ./MauiPersianToolkit/MauiPersianToolkit.csproj -c Release --no-restore -f net8.0
+      run: dotnet build ./MauiPersianToolkit/MauiPersianToolkit.csproj -c Release --no-restore
 
     - name: Build Test Project
       run: dotnet build ./MauiPersianToolkit.Test/MauiPersianToolkit.Test.csproj -c Release --no-restore

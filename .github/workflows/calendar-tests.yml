@@ -57,5 +57,5 @@ jobs:
       with:
         name: Calendar Tests Report
         path: '**/calendar-*-tests.trx'
-        reporter: 'dotnet trx'
+        reporter: 'dotnet-trx'
         fail-on-error: false
