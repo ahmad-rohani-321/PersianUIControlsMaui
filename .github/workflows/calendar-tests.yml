@@ -25,8 +25,15 @@ jobs:
       with:
         dotnet-version: 8.0.x
 
+    - name: Install MAUI workloads
+      shell: pwsh
+      run: dotnet workload install maui
+
     - name: Restore dependencies
       run: dotnet restore
+
+    - name: Restore workloads
+      run: dotnet workload restore
 
     - name: Run Calendar Service Tests
       run: dotnet test ./MauiPersianToolkit.Test/MauiPersianToolkit.Test.csproj `
