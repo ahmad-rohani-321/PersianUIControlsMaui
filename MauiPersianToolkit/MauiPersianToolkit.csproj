@@ -8,14 +8,14 @@
 		<UseMaui>true</UseMaui>
 		<SingleProject>true</SingleProject>
 		<ImplicitUsings>enable</ImplicitUsings>
-    <VersionPrefix>2.0.7</VersionPrefix>
+		<VersionPrefix>2.0.7</VersionPrefix>
 		<SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'ios'">14.2</SupportedOSPlatformVersion>
 		<SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'maccatalyst'">14.0</SupportedOSPlatformVersion>
 		<SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'android'">21.0</SupportedOSPlatformVersion>
 		<SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'windows'">10.0.17763.0</SupportedOSPlatformVersion>
 		<TargetPlatformMinVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'windows'">10.0.17763.0</TargetPlatformMinVersion>
 		<SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'tizen'">6.5</SupportedOSPlatformVersion>
-		<GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+		<GeneratePackageOnBuild>False</GeneratePackageOnBuild>
 		<Title>Persian Calendar for .NET MAUI</Title>
 		<Authors>rezashaban</Authors>
 		<Description>MauiPersianToolkit is a comprehensive library for .NET MAUI that provides a variety of Persian language UI controls and components. This library is designed to help developers create modern, cross-platform applications with support for Persian language and right-to-left (RTL) layouts.</Description>
@@ -25,6 +25,7 @@
 		<RepositoryUrl>https://github.com/RezaShaban/MauiPersianToolkit.git</RepositoryUrl>
 		<RepositoryType>git</RepositoryType>
 		<PackageLicenseExpression>MIT</PackageLicenseExpression>
+		<RepositoryBranch>master</RepositoryBranch>
 	</PropertyGroup>
 
 	<ItemGroup>
