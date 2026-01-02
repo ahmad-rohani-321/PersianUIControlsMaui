@@ -20,25 +20,21 @@ jobs:
     - name: Restore dependencies
       run: dotnet restore
 
-    - name: Install Coverlet Tool
-      run: dotnet tool install --global coverlet.console
-
     - name: Run Tests with Code Coverage
-      run: |
-        dotnet test ./MauiPersianToolkit.Test/MauiPersianToolkit.Test.csproj `
-          -c Debug `
-          --no-restore `
-          /p:CollectCoverage=true `
-          /p:CoverletOutputFormat=cobertura `
-          /p:CoverletOutput=./coverage/
+      run: dotnet test ./MauiPersianToolkit.Test/MauiPersianToolkit.Test.csproj `
+        -c Debug `
+        --no-restore `
+        /p:CollectCoverage=true `
+        /p:CoverletOutputFormat=cobertura `
+        /p:CoverletOutput=./coverage/ `
+        --logger "trx;LogFileName=coverage-tests.trx"
 
-    - name: Generate Coverage Report
-      uses: irongut/CodeCoverage-Badge@v10
+    - name: Upload Coverage Artifact
+      uses: actions/upload-artifact@v4
       if: always()
       with:
-        filename: coverage/coverage.cobertura.xml
-        badge: true
-        label: Code Coverage
+        name: coverage-report
+        path: './coverage/'
 
     - name: Upload Coverage to Codecov
       uses: codecov/codecov-action@v3
@@ -47,3 +43,20 @@ jobs:
         files: ./coverage/coverage.cobertura.xml
         flags: unittests
         name: codecov-umbrella
+        fail_ci_if_error: false
+        verbose: true
+
+    - name: Display Coverage Summary
+      shell: pwsh
+      if: always()
+      run: |
+        if (Test-Path "./coverage/coverage.cobertura.xml") {
+          Write-Output "? Coverage report generated successfully"
+          $xml = [xml](Get-Content "./coverage/coverage.cobertura.xml")
+          $lineRate = $xml.coverage.Attributes['line-rate'].Value
+          $branchRate = $xml.coverage.Attributes['branch-rate'].Value
+          Write-Output "?? Line Coverage: $([math]::Round([double]$lineRate * 100, 2))%"
+          Write-Output "?? Branch Coverage: $([math]::Round([double]$branchRate * 100, 2))%"
+        } else {
+          Write-Output "?? Coverage report not found"
+        }

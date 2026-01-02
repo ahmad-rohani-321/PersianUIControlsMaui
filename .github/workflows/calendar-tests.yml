@@ -17,9 +17,6 @@ on:
 jobs:
   calendar-tests:
     runs-on: windows-latest
-    strategy:
-      matrix:
-        calendar-type: [Persian, Gregorian, Hijri]
     steps:
     - uses: actions/checkout@v4
     
@@ -36,20 +33,29 @@ jobs:
         -c Debug `
         --no-restore `
         --filter "FullyQualifiedName~CalendarServiceTests" `
-        --logger "console;verbosity=detailed"
+        --logger "trx;LogFileName=calendar-service-tests.trx" `
+        --verbosity normal
 
     - name: Run Calendar Week Layout Tests
       run: dotnet test ./MauiPersianToolkit.Test/MauiPersianToolkit.Test.csproj `
         -c Debug `
         --no-restore `
         --filter "FullyQualifiedName~CalendarWeekLayoutTests" `
-        --logger "console;verbosity=detailed"
+        --logger "trx;LogFileName=calendar-layout-tests.trx" `
+        --verbosity normal
 
-    - name: Upload Test Logs
+    - name: Upload Test Results
       uses: actions/upload-artifact@v4
-      if: failure()
+      if: always()
       with:
-        name: calendar-test-logs-${{ matrix.calendar-type }}
-        path: |
-          **/bin/Debug/
-          **/test-results/
+        name: calendar-test-results
+        path: '**/calendar-*-tests.trx'
+
+    - name: Publish Calendar Test Report
+      uses: dorny/test-reporter@v1
+      if: always()
+      with:
+        name: Calendar Tests Report
+        path: '**/calendar-*-tests.trx'
+        reporter: 'dotnet trx'
+        fail-on-error: false

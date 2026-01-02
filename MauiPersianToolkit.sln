@@ -11,8 +11,12 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".github", ".github", "{849D
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "workflows", "workflows", "{ADA0BF29-7398-403A-92DF-6D98E07F2C06}"
 	ProjectSection(SolutionItems) = preProject
+		.github\workflows\calendar-tests.yml = .github\workflows\calendar-tests.yml
+		.github\workflows\code-coverage.yml = .github\workflows\code-coverage.yml
 		.github\workflows\dotnet.yml = .github\workflows\dotnet.yml
 		.github\workflows\nuget-deploy.yml = .github\workflows\nuget-deploy.yml
+		.github\workflows\pr-status-checks.yml = .github\workflows\pr-status-checks.yml
+		.github\workflows\README.md = .github\workflows\README.md
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MauiPersianToolkit.Test", "MauiPersianToolkit.Test\MauiPersianToolkit.Test.csproj", "{39CCB2F9-774D-4632-BBA4-D23F062A5D06}"
