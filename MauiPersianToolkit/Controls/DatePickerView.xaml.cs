@@ -7,59 +7,63 @@ namespace MauiPersianToolkit.Controls;
 [XamlCompilation(XamlCompilationOptions.Compile)]
 public partial class DatePickerView : Popup
 {
-    DayOfMonth selectedDate;
-    DatePickerViewModel viewModel;
+    private DayOfMonth _selectedDate;
+    private DatePickerViewModel _viewModel;
 
     public event EventHandler<SelectedDateChangedEventArgs> SelectedDateChanged;
 
     public DatePickerView(CalendarOptions options)
     {
-        retry:
+        InitializeComponent();
+        InitializeView(options);
+    }
+
+    private void InitializeView(CalendarOptions options)
+    {
         try
         {
-            InitializeComponent();
-            btnAccept.Clicked += btnAccept_Clicked;
-            btnCancel.Clicked += btnCancel_Clicked;
-            viewModel = new DatePickerViewModel(options);
-            this.BindingContext = viewModel;
+            btnAccept.Clicked += BtnAccept_Clicked;
+            btnCancel.Clicked += BtnCancel_Clicked;
+            
+            _viewModel = new DatePickerViewModel(options);
+            this.BindingContext = _viewModel;
         }
-        catch(Exception ex)
+        catch (Exception ex)
         {
-            goto retry;
+            System.Diagnostics.Debug.WriteLine($"Error initializing DatePickerView: {ex.Message}");
+            throw;
         }
     }
 
-    private void btnDay_Clicked(object sender, EventArgs e)
+    private void BtnDay_Clicked(object sender, EventArgs e)
     {
-        if (((Button)sender).CommandParameter is not DayOfMonth _selectedDate || !_selectedDate.CanSelect)
+        if (((Button)sender).CommandParameter is not DayOfMonth selectedDayOfMonth || !selectedDayOfMonth.CanSelect)
             return;
 
-        viewModel.SelectDateCommand.Execute(_selectedDate);
+        _viewModel.SelectDateCommand.Execute(selectedDayOfMonth);
+        _selectedDate = selectedDayOfMonth;
 
-        selectedDate = _selectedDate;
-
-        if (SelectedDateChanged != null && viewModel.CanClose(selectedDate))
+        if (SelectedDateChanged != null && _viewModel.CanClose(_selectedDate))
         {
-            viewModel.Options.OnAccept?.Invoke(viewModel.SelectedDays);
-            SelectedDateChanged.Invoke(sender, new SelectedDateChangedEventArgs()
+            _viewModel.Options.OnAccept?.Invoke(_viewModel.SelectedDays);
+            SelectedDateChanged.Invoke(sender, new SelectedDateChangedEventArgs
             {
-                SelectedDate = selectedDate,
-                SelectedDates = viewModel.SelectedDays.ToList()
+                SelectedDate = _selectedDate,
+                SelectedDates = _viewModel.SelectedDays.ToList()
             });
-
         }
     }
 
-    private void btnAccept_Clicked(object sender, EventArgs e)
+    private void BtnAccept_Clicked(object sender, EventArgs e)
     {
-        var dates = viewModel.SelectedDays.Where(x => x.IsSelected).ToList();
-        viewModel.Options.OnAccept?.Invoke(dates);
+        var dates = _viewModel.SelectedDays.Where(x => x.IsSelected).ToList();
+        _viewModel.Options.OnAccept?.Invoke(dates);
         this.Close();
     }
 
-    private void btnCancel_Clicked(object sender, EventArgs e)
+    private void BtnCancel_Clicked(object sender, EventArgs e)
     {
-        viewModel.Options.OnCancel?.Invoke();
+        _viewModel.Options.OnCancel?.Invoke();
         this.Close();
     }
 }

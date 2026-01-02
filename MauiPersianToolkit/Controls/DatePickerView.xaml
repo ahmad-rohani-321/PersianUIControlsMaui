@@ -89,6 +89,9 @@
                     <DataTrigger TargetType="HorizontalStackLayout" Binding="{Binding SelectDateMode}" Value="1">
                         <Setter Property="IsVisible" Value="True"/>
                     </DataTrigger>
+                    <DataTrigger TargetType="HorizontalStackLayout" Binding="{Binding Options.CalendarType}" Value="0">
+                        <Setter Property="FlowDirection" Value="LeftToRight"/>
+                    </DataTrigger>
                 </HorizontalStackLayout.Triggers>
                 <BindableLayout.ItemTemplate>
                     <DataTemplate x:DataType="x:String">
@@ -97,7 +100,7 @@
                 </BindableLayout.ItemTemplate>
             </HorizontalStackLayout>
 
-            <CollectionView ItemsSource="{Binding DaysOfMonth}" Grid.Column="0" Grid.Row="2" Grid.RowSpan="6" Grid.ColumnSpan="7" IsVisible="False">
+            <CollectionView ItemsSource="{Binding DaysOfMonth}" Grid.Column="0" Grid.Row="2" Grid.RowSpan="6" Grid.ColumnSpan="7" IsVisible="False" FlowDirection="RightToLeft">
                 <CollectionView.ItemsLayout>
                     <GridItemsLayout Span="7" HorizontalItemSpacing="0" Orientation="Vertical"/>
                 </CollectionView.ItemsLayout>
@@ -105,10 +108,13 @@
                     <DataTrigger TargetType="CollectionView" Binding="{Binding SelectDateMode}" Value="1">
                         <Setter Property="IsVisible" Value="True"/>
                     </DataTrigger>
+                    <DataTrigger TargetType="CollectionView" Binding="{Binding Options.CalendarType}" Value="0">
+                        <Setter Property="FlowDirection" Value="LeftToRight"/>
+                    </DataTrigger>
                 </CollectionView.Triggers>
                 <CollectionView.ItemTemplate>
                     <DataTemplate x:DataType="models:DayOfMonth">
-                        <Button Padding="5,3" Text="{Binding DayNum}" WidthRequest="36" HeightRequest="36" HorizontalOptions="Center" VerticalOptions="Center" CommandParameter="{Binding .}" Clicked="btnDay_Clicked" FontFamily="IranianSans" IsVisible="{Binding IsInCurrentMonth}" BackgroundColor="White" FontAutoScalingEnabled="True" CornerRadius="7" Margin="0,2,0,0">
+                        <Button Padding="5,3" Text="{Binding DayNum}" WidthRequest="36" HeightRequest="36" HorizontalOptions="Center" VerticalOptions="Center" CommandParameter="{Binding .}" Clicked="BtnDay_Clicked" FontFamily="IranianSans" IsVisible="{Binding IsInCurrentMonth}" BackgroundColor="White" FontAutoScalingEnabled="True" CornerRadius="7" Margin="0,2,0,0">
                             <Button.Triggers>
                                 <DataTrigger TargetType="Button" Binding="{Binding IsSelected}" Value="False">
                                     <Setter Property="TextColor" Value="#333"/>
