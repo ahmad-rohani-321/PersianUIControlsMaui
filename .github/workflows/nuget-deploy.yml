@@ -24,8 +24,8 @@ jobs:
     - name: Restore dependencies
       run: dotnet restore
       
-    - name: Build
-      run: dotnet build --configuration Release --no-restore
+    - name: Build library only
+      run: dotnet build ./MauiPersianToolkit/MauiPersianToolkit.csproj --configuration Release -f net8.0 --no-restore
 
     - name: Extract version from tag
       id: extract_version
@@ -43,7 +43,12 @@ jobs:
       shell: pwsh
       run: |
         $nupkgPath = ".\nupkgs\MauiPersianToolkit.${{ env.VERSION }}.nupkg"
-        dotnet nuget push $nupkgPath --api-key $env:NUGET_API_KEY --source $env:NUGET_SOURCE
+        if (Test-Path $nupkgPath) {
+          dotnet nuget push $nupkgPath --api-key $env:NUGET_API_KEY --source $env:NUGET_SOURCE
+        } else {
+          Write-Error "Package file not found: $nupkgPath"
+          exit 1
+        }
       env:
         NUGET_API_KEY: ${{ secrets.NUGET_PERSIAN_API_KEY }}
         NUGET_SOURCE: https://api.nuget.org/v3/index.json

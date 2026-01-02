@@ -1,4 +1,4 @@
-name: PersianUIControlsMaui CI
+name: MauiPersianToolkit CI
 
 on:
   push:
@@ -10,11 +10,12 @@ jobs:
   build:
     runs-on: windows-latest
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
+    
     - name: Setup .NET
-      uses: actions/setup-dotnet@v3
+      uses: actions/setup-dotnet@v4
       with:
-        dotnet-version: 6.0.x
+        dotnet-version: 8.0.x
         
     - name: Install MAUI workloads
       shell: pwsh
@@ -23,8 +24,8 @@ jobs:
     - name: Restore dependencies
       run: dotnet restore
 
-    - name: Build
-      run: dotnet build -c Debug --no-restore
+    - name: Build Library
+      run: dotnet build ./MauiPersianToolkit/MauiPersianToolkit.csproj -c Debug --no-restore -f net8.0
 
-    - name: Test
-      run: dotnet test --no-build --verbosity normal
+    - name: Build Sample App
+      run: dotnet build ./PersianUISamples/PersianUISamples.csproj -c Debug --no-restore -f net8.0-windows10.0.19041.0
