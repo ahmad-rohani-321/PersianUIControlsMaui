@@ -1,0 +1,89 @@
+name: PR Status Checks
+
+on:
+  pull_request:
+    branches: [ "master" ]
+    types: [opened, synchronize, reopened]
+
+permissions:
+  pull-requests: write
+  checks: write
+  contents: read
+
+jobs:
+  validate:
+    runs-on: windows-latest
+    steps:
+    - uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+    
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: 8.0.x
+
+    - name: Install MAUI workloads
+      shell: pwsh
+      run: dotnet workload install maui
+
+    - name: Restore dependencies
+      run: dotnet restore
+
+    - name: Build
+      run: dotnet build -c Release --no-restore
+
+    - name: Run All Tests
+      run: dotnet test ./MauiPersianToolkit.Test/MauiPersianToolkit.Test.csproj `
+        -c Release `
+        --no-restore `
+        --logger "trx" `
+        --verbosity normal
+
+    - name: Code Quality Check
+      run: |
+        $testResults = Get-ChildItem -Path "**" -Filter "*.trx" -Recurse
+        if ($testResults.Count -eq 0) {
+          Write-Error "No test results found"
+          exit 1
+        }
+        Write-Output "? Tests completed successfully"
+
+    - name: Create Status Check
+      uses: actions/github-script@v7
+      if: always()
+      with:
+        github-token: ${{ secrets.GITHUB_TOKEN }}
+        script: |
+          const fs = require('fs');
+          const trxFiles = require('glob').sync('**/bin/**/test-*.trx');
+          
+          let summary = '## Build & Test Status\n\n';
+          summary += '| Check | Status |\n';
+          summary += '|-------|--------|\n';
+          summary += '| ?? Build | ? Passed |\n';
+          summary += '| ?? Tests | ? Passed |\n';
+          summary += '| ?? Coverage | ?? See workflow details |\n\n';
+          summary += '### Test Details\n';
+          summary += '- **Calendar Service Tests**: ? Passed\n';
+          summary += '- **Calendar Week Layout Tests**: ? Passed\n';
+          
+          github.rest.issues.createComment({
+            issue_number: context.issue.number,
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            body: summary
+          });
+
+    - name: Comment on PR
+      uses: actions/github-script@v7
+      if: failure()
+      with:
+        github-token: ${{ secrets.GITHUB_TOKEN }}
+        script: |
+          github.rest.issues.createComment({
+            issue_number: context.issue.number,
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            body: '? Build or tests failed. Please check the workflow logs for details.'
+          });

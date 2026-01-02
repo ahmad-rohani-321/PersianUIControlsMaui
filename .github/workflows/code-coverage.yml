@@ -1,0 +1,49 @@
+name: Code Coverage
+
+on:
+  push:
+    branches: [ "master" ]
+  pull_request:
+    branches: [ "master" ]
+
+jobs:
+  coverage:
+    runs-on: windows-latest
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: 8.0.x
+
+    - name: Restore dependencies
+      run: dotnet restore
+
+    - name: Install Coverlet Tool
+      run: dotnet tool install --global coverlet.console
+
+    - name: Run Tests with Code Coverage
+      run: |
+        dotnet test ./MauiPersianToolkit.Test/MauiPersianToolkit.Test.csproj `
+          -c Debug `
+          --no-restore `
+          /p:CollectCoverage=true `
+          /p:CoverletOutputFormat=cobertura `
+          /p:CoverletOutput=./coverage/
+
+    - name: Generate Coverage Report
+      uses: irongut/CodeCoverage-Badge@v10
+      if: always()
+      with:
+        filename: coverage/coverage.cobertura.xml
+        badge: true
+        label: Code Coverage
+
+    - name: Upload Coverage to Codecov
+      uses: codecov/codecov-action@v3
+      if: always()
+      with:
+        files: ./coverage/coverage.cobertura.xml
+        flags: unittests
+        name: codecov-umbrella

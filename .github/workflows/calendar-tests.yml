@@ -1,0 +1,55 @@
+name: Calendar Tests
+
+on:
+  push:
+    branches: [ "master" ]
+    paths:
+      - 'MauiPersianToolkit/Services/Calendar/**'
+      - 'MauiPersianToolkit/ViewModels/DatePickerViewModel.cs'
+      - 'MauiPersianToolkit.Test/Calendar*'
+  pull_request:
+    branches: [ "master" ]
+    paths:
+      - 'MauiPersianToolkit/Services/Calendar/**'
+      - 'MauiPersianToolkit/ViewModels/DatePickerViewModel.cs'
+      - 'MauiPersianToolkit.Test/Calendar*'
+
+jobs:
+  calendar-tests:
+    runs-on: windows-latest
+    strategy:
+      matrix:
+        calendar-type: [Persian, Gregorian, Hijri]
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: 8.0.x
+
+    - name: Restore dependencies
+      run: dotnet restore
+
+    - name: Run Calendar Service Tests
+      run: dotnet test ./MauiPersianToolkit.Test/MauiPersianToolkit.Test.csproj `
+        -c Debug `
+        --no-restore `
+        --filter "FullyQualifiedName~CalendarServiceTests" `
+        --logger "console;verbosity=detailed"
+
+    - name: Run Calendar Week Layout Tests
+      run: dotnet test ./MauiPersianToolkit.Test/MauiPersianToolkit.Test.csproj `
+        -c Debug `
+        --no-restore `
+        --filter "FullyQualifiedName~CalendarWeekLayoutTests" `
+        --logger "console;verbosity=detailed"
+
+    - name: Upload Test Logs
+      uses: actions/upload-artifact@v4
+      if: failure()
+      with:
+        name: calendar-test-logs-${{ matrix.calendar-type }}
+        path: |
+          **/bin/Debug/
+          **/test-results/
