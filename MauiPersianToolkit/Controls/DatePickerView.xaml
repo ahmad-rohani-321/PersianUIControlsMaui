@@ -13,7 +13,7 @@
         <Border.StrokeShape>
             <RoundRectangle Fill="Transparent" CornerRadius="7" StrokeThickness="1" StrokeLineJoin="Round" Stroke="Transparent"/>
         </Border.StrokeShape>
-        <Grid HorizontalOptions="FillAndExpand" ColumnDefinitions="38,38,38,38,38,38,38" Padding="15" RowDefinitions="48,48,38,38,38,38,38,38,Auto,Auto,Auto" RowSpacing="0" ColumnSpacing="0">
+        <Grid HorizontalOptions="Fill" ColumnDefinitions="38,38,38,38,38,38,38" Padding="15" RowDefinitions="48,48,38,38,38,38,38,38,Auto,Auto,Auto" RowSpacing="0" ColumnSpacing="0">
 
             <Grid Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="7" ColumnDefinitions="42,42,50*,50*,42,42" ColumnSpacing="0"
                   RowDefinitions="36" VerticalOptions="Start">
@@ -21,7 +21,7 @@
 
                 <Button Text="&#xf324;" Margin="0" Padding="15,7" Command="{Binding PrevYearCommand}" TextColor="Black" Grid.Column="1" Grid.Row="0" BackgroundColor="White" FontFamily="FontAwesome" IsVisible="False"/>
 
-                <Button HorizontalOptions="FillAndExpand" Text="{Binding CurrentMonth}" FontSize="12" TextColor="Black" Padding="10,7" Grid.Column="1" Grid.ColumnSpan="2" Grid.Row="0" BackgroundColor="White" FontFamily="IranianSans" FontAutoScalingEnabled="True" Command="{Binding SwitchModeCommand}" CommandParameter="0">
+                <Button HorizontalOptions="Fill" Text="{Binding CurrentMonth}" FontSize="12" TextColor="Black" Padding="10,7" Grid.Column="1" Grid.ColumnSpan="2" Grid.Row="0" BackgroundColor="White" FontFamily="IranianSans" FontAutoScalingEnabled="True" Command="{Binding SwitchModeCommand}" CommandParameter="0" ContentLayout="Left,20">
                     <Button.ImageSource>
                         <FontImageSource Glyph="&#xf078;" FontFamily="FontAwesome" Color="Black" Size="14"/>
                     </Button.ImageSource>
@@ -32,7 +32,7 @@
                     </Button.Triggers>
                 </Button>
 
-                <Button HorizontalOptions="FillAndExpand" Text="{Binding CurrentYear}" TextColor="Black" Padding="15,7" Grid.Column="3" Grid.Row="0" BackgroundColor="White" FontFamily="IranianSans" FontAutoScalingEnabled="True" Grid.ColumnSpan="2" Command="{Binding SwitchModeCommand}" CommandParameter="2">
+                <Button HorizontalOptions="Fill" Text="{Binding CurrentYear}" TextColor="Black" Padding="10,7" Grid.Column="3" Grid.Row="0" BackgroundColor="White" FontFamily="IranianSans" FontAutoScalingEnabled="True" Grid.ColumnSpan="2" Command="{Binding SwitchModeCommand}" CommandParameter="2" ContentLayout="Left,20">
                     <Button.ImageSource>
                         <FontImageSource Glyph="&#xf078;" FontFamily="FontAwesome" Color="Black" Size="14"/>
                     </Button.ImageSource>
@@ -56,13 +56,7 @@
                 </FlexLayout.Triggers>
                 <BindableLayout.ItemTemplate>
                     <DataTemplate x:DataType="models:PuiTuple">
-                        <Button Text="{Binding Value}" Margin="0" BackgroundColor="White" TextColor="#333" FontSize="12" FontFamily="IranianSans" FlexLayout.Basis="25%" FlexLayout.Grow="1" Command="{Binding SelectMonthCommand,Source={RelativeSource AncestorType={x:Type vm:DatePickerViewModel}}}" CommandParameter="{Binding}">
-                            <!--<Button.Triggers>
-                                <DataTrigger TargetType="Button" Binding="{Binding .}" Value="مهر">
-                                    <Setter Property="TextColor" Value="{Binding Options.SelectDayColor,Source={RelativeSource AncestorType={x:Type vm:DatePickerViewModel}}}"/>
-                                </DataTrigger>
-                            </Button.Triggers>-->
-                        </Button>
+                        <Button Text="{Binding Value}" Margin="0" BackgroundColor="White" TextColor="#333" FontSize="12" FontFamily="IranianSans" FlexLayout.Basis="25%" FlexLayout.Grow="1" Command="{Binding SelectMonthCommand,Source={RelativeSource AncestorType={x:Type vm:DatePickerViewModel}}}" CommandParameter="{Binding}" Padding="0"/>
                     </DataTemplate>
                 </BindableLayout.ItemTemplate>
             </FlexLayout>

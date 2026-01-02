@@ -8,233 +8,391 @@ namespace MauiPersianToolkit.Controls;
 [XamlCompilation(XamlCompilationOptions.Compile)]
 public partial class DatePicker : ContentView
 {
-    #region Field's
-    private ContentPage parentPage;
-    private DatePickerView view = null;
-    private Task initedView;
+    #region Fields
+
+    private ContentPage _parentPage;
+    private DatePickerView _pickerView;
+    private bool _isInitializing;
+
     #endregion
 
-    #region Propertei's
-    public static readonly BindableProperty CalendarOptionProperty = BindableProperty.Create(nameof(CalendarOption), typeof(CalendarOptions), typeof(DatePicker), new CalendarOptions(), BindingMode.TwoWay);
+    #region Properties
+
+    public static readonly BindableProperty CalendarOptionProperty = BindableProperty.Create(
+        nameof(CalendarOption), typeof(CalendarOptions), typeof(DatePicker),
+        new CalendarOptions(), BindingMode.TwoWay);
+
     public CalendarOptions CalendarOption
     {
-        get { return (CalendarOptions)GetValue(CalendarOptionProperty); }
-        set { SetValue(CalendarOptionProperty, value); }
+        get => (CalendarOptions)GetValue(CalendarOptionProperty);
+        set => SetValue(CalendarOptionProperty, value);
     }
-    public static readonly BindableProperty SelectedPersianDateProperty = BindableProperty.Create(nameof(SelectedPersianDate), typeof(object), typeof(DatePicker), default(string), BindingMode.TwoWay);
+
+    public static readonly BindableProperty SelectedPersianDateProperty = BindableProperty.Create(
+        nameof(SelectedPersianDate), typeof(string), typeof(DatePicker),
+        default(string), BindingMode.TwoWay);
+
     public string SelectedPersianDate
     {
-        get { return (string)GetValue(SelectedPersianDateProperty); }
-        set { SetValue(SelectedPersianDateProperty, value); }
+        get => (string)GetValue(SelectedPersianDateProperty);
+        set => SetValue(SelectedPersianDateProperty, value);
     }
 
-    public static readonly BindableProperty FormattedDateProperty = BindableProperty.Create(nameof(FormattedDate), typeof(object), typeof(DatePicker), default(string), BindingMode.TwoWay);
+    public static readonly BindableProperty FormattedDateProperty = BindableProperty.Create(
+        nameof(FormattedDate), typeof(string), typeof(DatePicker),
+        default(string), BindingMode.TwoWay);
+
     public string FormattedDate
     {
-        get { return (string)GetValue(FormattedDateProperty); }
-        set { SetValue(FormattedDateProperty, value); }
+        get => (string)GetValue(FormattedDateProperty);
+        set => SetValue(FormattedDateProperty, value);
     }
 
-    public static readonly BindableProperty BadgeDatesProperty = BindableProperty.Create(nameof(BadgeDates), typeof(List<string>), typeof(DatePicker), default(List<string>), BindingMode.TwoWay);
+    public static readonly BindableProperty BadgeDatesProperty = BindableProperty.Create(
+        nameof(BadgeDates), typeof(List<string>), typeof(DatePicker),
+        new List<string>(), BindingMode.TwoWay);
+
     public List<string> BadgeDates
     {
-        get { return (List<string>)GetValue(BadgeDatesProperty); }
-        set { SetValue(BadgeDatesProperty, value); }
+        get => (List<string>)GetValue(BadgeDatesProperty);
+        set => SetValue(BadgeDatesProperty, value);
     }
 
-    public static readonly BindableProperty DateSeparatorProperty = BindableProperty.Create(nameof(DateSeparator), typeof(char), typeof(DatePicker), '/', BindingMode.TwoWay);
+    public static readonly BindableProperty DateSeparatorProperty = BindableProperty.Create(
+        nameof(DateSeparator), typeof(char), typeof(DatePicker),
+        '/', BindingMode.TwoWay);
+
     public char DateSeparator
     {
-        get { return (char)GetValue(DateSeparatorProperty); }
-        set { SetValue(DateSeparatorProperty, value); }
+        get => (char)GetValue(DateSeparatorProperty);
+        set => SetValue(DateSeparatorProperty, value);
     }
 
-    public static readonly BindableProperty DisplayFormatProperty = BindableProperty.Create(nameof(DisplayFormat), typeof(object), typeof(DatePicker), "yyyy/MM/dd", BindingMode.TwoWay);
+    public static readonly BindableProperty DisplayFormatProperty = BindableProperty.Create(
+        nameof(DisplayFormat), typeof(string), typeof(DatePicker),
+        "yyyy/MM/dd", BindingMode.TwoWay);
+
     public string DisplayFormat
     {
-        get { return (string)GetValue(DisplayFormatProperty); }
-        set { SetValue(DisplayFormatProperty, value); }
+        get => (string)GetValue(DisplayFormatProperty);
+        set => SetValue(DisplayFormatProperty, value);
     }
 
-    public static readonly BindableProperty PlaceHolderColorProperty = BindableProperty.Create(nameof(PlaceHolderColor), typeof(Color), typeof(DatePicker), Colors.Gray, BindingMode.TwoWay);
+    public static readonly BindableProperty PlaceHolderColorProperty = BindableProperty.Create(
+        nameof(PlaceHolderColor), typeof(Color), typeof(DatePicker),
+        Colors.Gray, BindingMode.TwoWay);
+
     public Color PlaceHolderColor
     {
-        get { return (Color)GetValue(PlaceHolderColorProperty); }
-        set { SetValue(PlaceHolderColorProperty, value); }
-    }
-    public static readonly BindableProperty ActivePlaceHolderColorProperty = BindableProperty.Create(nameof(ActivePlaceHolderColor), typeof(Color), typeof(DatePicker), Colors.Gray, BindingMode.TwoWay);
-    public Color ActivePlaceHolderColor
-    {
-        get { return (Color)GetValue(ActivePlaceHolderColorProperty); }
-        set { SetValue(ActivePlaceHolderColorProperty, value); }
-    }
-    public static readonly BindableProperty TextColorProperty = BindableProperty.Create(nameof(TextColor), typeof(Color), typeof(DatePicker), Colors.Black, BindingMode.TwoWay);
-    public Color TextColor
-    {
-        get { return (Color)GetValue(TextColorProperty); }
-        set { SetValue(TextColorProperty, value); }
-    }
-    public static readonly BindableProperty PlaceHolderProperty = BindableProperty.Create(nameof(PlaceHolder), typeof(string), typeof(DatePicker), default(string), BindingMode.TwoWay);
-    public string PlaceHolder
-    {
-        get { return (string)GetValue(PlaceHolderProperty); }
-        set { SetValue(PlaceHolderProperty, value); }
-    }
-    public static readonly BindableProperty ErrorMessageProperty = BindableProperty.Create(nameof(ErrorMessage), typeof(string), typeof(DatePicker), default(string), BindingMode.TwoWay);
-    public string ErrorMessage
-    {
-        get { return (string)GetValue(ErrorMessageProperty); }
-        set { SetValue(ErrorMessageProperty, value); }
-    }
-    public static readonly BindableProperty IsValidProperty = BindableProperty.Create(nameof(IsValid), typeof(bool), typeof(DatePicker), default(bool), BindingMode.TwoWay);
-    public bool IsValid
-    {
-        get { return (bool)GetValue(IsValidProperty); }
-        set { SetValue(IsValidProperty, value); }
-    }
-    public static readonly BindableProperty IsLoadingProperty = BindableProperty.Create(nameof(IsLoading), typeof(bool), typeof(DatePicker), default(bool), BindingMode.TwoWay);
-    public bool IsLoading
-    {
-        get { return (bool)GetValue(IsLoadingProperty); }
-        set { SetValue(IsLoadingProperty, value); }
-    }
-    public static readonly BindableProperty IconProperty = BindableProperty.Create(nameof(Icon), typeof(string), typeof(DatePicker), default(string), BindingMode.TwoWay);
-    public string Icon
-    {
-        get { return (string)GetValue(IconProperty); }
-        set { SetValue(IconProperty, value); }
+        get => (Color)GetValue(PlaceHolderColorProperty);
+        set => SetValue(PlaceHolderColorProperty, value);
     }
 
-    public static readonly BindableProperty OnChangeDateCommandProperty = BindableProperty.Create(nameof(OnChangeDateCommand), typeof(Command), typeof(DatePicker), default(Command), BindingMode.TwoWay);
+    public static readonly BindableProperty ActivePlaceHolderColorProperty = BindableProperty.Create(
+        nameof(ActivePlaceHolderColor), typeof(Color), typeof(DatePicker),
+        Colors.Gray, BindingMode.TwoWay);
+
+    public Color ActivePlaceHolderColor
+    {
+        get => (Color)GetValue(ActivePlaceHolderColorProperty);
+        set => SetValue(ActivePlaceHolderColorProperty, value);
+    }
+
+    public static readonly BindableProperty TextColorProperty = BindableProperty.Create(
+        nameof(TextColor), typeof(Color), typeof(DatePicker),
+        Colors.Black, BindingMode.TwoWay);
+
+    public Color TextColor
+    {
+        get => (Color)GetValue(TextColorProperty);
+        set => SetValue(TextColorProperty, value);
+    }
+
+    public static readonly BindableProperty PlaceHolderProperty = BindableProperty.Create(
+        nameof(PlaceHolder), typeof(string), typeof(DatePicker),
+        default(string), BindingMode.TwoWay);
+
+    public string PlaceHolder
+    {
+        get => (string)GetValue(PlaceHolderProperty);
+        set => SetValue(PlaceHolderProperty, value);
+    }
+
+    public static readonly BindableProperty ErrorMessageProperty = BindableProperty.Create(
+        nameof(ErrorMessage), typeof(string), typeof(DatePicker),
+        default(string), BindingMode.TwoWay);
+
+    public string ErrorMessage
+    {
+        get => (string)GetValue(ErrorMessageProperty);
+        set => SetValue(ErrorMessageProperty, value);
+    }
+
+    public static readonly BindableProperty IsValidProperty = BindableProperty.Create(
+        nameof(IsValid), typeof(bool), typeof(DatePicker),
+        false, BindingMode.TwoWay);
+
+    public bool IsValid
+    {
+        get => (bool)GetValue(IsValidProperty);
+        set => SetValue(IsValidProperty, value);
+    }
+
+    public static readonly BindableProperty IsLoadingProperty = BindableProperty.Create(
+        nameof(IsLoading), typeof(bool), typeof(DatePicker),
+        false, BindingMode.TwoWay);
+
+    public bool IsLoading
+    {
+        get => (bool)GetValue(IsLoadingProperty);
+        set => SetValue(IsLoadingProperty, value);
+    }
+
+    public static readonly BindableProperty IconProperty = BindableProperty.Create(
+        nameof(Icon), typeof(string), typeof(DatePicker),
+        default(string), BindingMode.TwoWay);
+
+    public string Icon
+    {
+        get => (string)GetValue(IconProperty);
+        set => SetValue(IconProperty, value);
+    }
+
+    public static readonly BindableProperty OnChangeDateCommandProperty = BindableProperty.Create(
+        nameof(OnChangeDateCommand), typeof(Command), typeof(DatePicker),
+        default(Command), BindingMode.TwoWay);
+
     public Command OnChangeDateCommand
     {
-        get { return (Command)GetValue(OnChangeDateCommandProperty); }
-        set { SetValue(OnChangeDateCommandProperty, value); }
+        get => (Command)GetValue(OnChangeDateCommandProperty);
+        set => SetValue(OnChangeDateCommandProperty, value);
     }
-    public static readonly BindableProperty OnOpenedCommandProperty = BindableProperty.Create(nameof(OnOpenedCommand), typeof(Command), typeof(DatePicker), default(Command), BindingMode.TwoWay);
+
+    public static readonly BindableProperty OnOpenedCommandProperty = BindableProperty.Create(
+        nameof(OnOpenedCommand), typeof(Command), typeof(DatePicker),
+        default(Command), BindingMode.TwoWay);
+
     public Command OnOpenedCommand
     {
-        get { return (Command)GetValue(OnOpenedCommandProperty); }
-        set { SetValue(OnOpenedCommandProperty, value); }
+        get => (Command)GetValue(OnOpenedCommandProperty);
+        set => SetValue(OnOpenedCommandProperty, value);
     }
+
     #endregion
 
     public DatePicker()
     {
         InitializeComponent();
+        AttachGestureRecognizer();
+    }
 
-        var gestureRecognizer = new TapGestureRecognizer();
-        gestureRecognizer.Command = new Command(TapGestureRecognizer_Tapped);
+    private void AttachGestureRecognizer()
+    {
+        var gestureRecognizer = new TapGestureRecognizer
+        {
+            Command = new Command(OnDatePickerTapped)
+        };
         container.GestureRecognizers.Add(gestureRecognizer);
     }
 
-    private Task InitPickerView()
+    private async Task InitializePickerViewAsync()
     {
-        if (initedView != null && initedView.Status == TaskStatus.Running)
-            return initedView;
+        if (_isInitializing)
+            return;
 
-        return Task.Run(() =>
+        _isInitializing = true;
+
+        try
         {
-            this.IsLoading = true;
+            IsLoading = true;
 
-            this.CalendarOption.SelectedPersianDate = this.SelectedPersianDate ?? DateTime.Now.ToPersianDate();
-            this.CalendarOption.SelectedPersianDates = this.BadgeDates;
-            this.CalendarOption.AutoCloseAfterSelectDate = this.CalendarOption.SelectionMode != Enums.SelectionMode.Multiple ? this.CalendarOption.AutoCloseAfterSelectDate : false;
-            this.view = new DatePickerView(this.CalendarOption);
-            this.view.SelectedDateChanged += (object sender, SelectedDateChangedEventArgs e) =>
-                {
-                    if (this.CalendarOption.SelectionMode == Enums.SelectionMode.Single)
-                    {
-                        this.SelectedPersianDate = e.SelectedDate.PersianDate.ToString();
-                        SetFormattedDate();
-                        OnChangeDateCommand?.Execute(SelectedPersianDate);
-                    }
-
-                    if ((CalendarOption.AutoCloseAfterSelectDate && this.CalendarOption.SelectionMode == Enums.SelectionMode.Single)
-                    || (CalendarOption.AutoCloseAfterSelectDate && e.SelectedDates.Count == 2 && this.CalendarOption.SelectionMode == Enums.SelectionMode.Range))
-                        this.view.Close();
-                };
-            this.view.Opened += (object sender, CommunityToolkit.Maui.Core.PopupOpenedEventArgs e) =>
-            {
-                this.OnOpenedCommand?.Execute(e);
-            };
-            this.view.Closed += (object sender, CommunityToolkit.Maui.Core.PopupClosedEventArgs e) =>
-            {
-                this.view = null;
-                initedView = InitPickerView();
-            };
-
-            this.IsLoading = false;
-        });
+            ConfigureCalendarOptions();
+            _pickerView = new DatePickerView(CalendarOption);
+            AttachPickerViewEventHandlers();
+        }
+        finally
+        {
+            IsLoading = false;
+            _isInitializing = false;
+        }
     }
 
-    //private async void TapGestureRecognizer_Tapped(object sender)
-    //{
-        
-    //}
+    private void ConfigureCalendarOptions()
+    {
+        CalendarOption.SelectedPersianDate = SelectedPersianDate ?? DateTime.Now.ToPersianDate();
+        CalendarOption.SelectedPersianDates = BadgeDates;
+        CalendarOption.AutoCloseAfterSelectDate = CalendarOption.SelectionMode != Enums.SelectionMode.Multiple 
+            && CalendarOption.AutoCloseAfterSelectDate;
+    }
 
-    #region Event's
+    private void AttachPickerViewEventHandlers()
+    {
+        _pickerView.SelectedDateChanged += OnPickerViewSelectedDateChanged;
+        _pickerView.Opened += OnPickerViewOpened;
+        _pickerView.Closed += OnPickerViewClosed;
+    }
+
+    private void OnPickerViewSelectedDateChanged(object sender, SelectedDateChangedEventArgs e)
+    {
+        if (CalendarOption.SelectionMode == Enums.SelectionMode.Single)
+        {
+            SelectedPersianDate = e.SelectedDate.PersianDate.ToString();
+            UpdateFormattedDate();
+            OnChangeDateCommand?.Execute(SelectedPersianDate);
+        }
+
+        if (ShouldAutoClose(e))
+        {
+            _pickerView.Close();
+        }
+    }
+
+    private bool ShouldAutoClose(SelectedDateChangedEventArgs e)
+    {
+        return CalendarOption.AutoCloseAfterSelectDate &&
+               ((CalendarOption.SelectionMode == Enums.SelectionMode.Single) ||
+                (CalendarOption.SelectionMode == Enums.SelectionMode.Range && e.SelectedDates.Count == 2));
+    }
+
+    private void OnPickerViewOpened(object sender, CommunityToolkit.Maui.Core.PopupOpenedEventArgs e)
+    {
+        OnOpenedCommand?.Execute(e);
+    }
+
+    private void OnPickerViewClosed(object sender, CommunityToolkit.Maui.Core.PopupClosedEventArgs e)
+    {
+        DetachPickerViewEventHandlers();
+        _pickerView = null;
+    }
+
+    private void DetachPickerViewEventHandlers()
+    {
+        if (_pickerView == null)
+            return;
+
+        _pickerView.SelectedDateChanged -= OnPickerViewSelectedDateChanged;
+        _pickerView.Opened -= OnPickerViewOpened;
+        _pickerView.Closed -= OnPickerViewClosed;
+    }
+
+    #region Event Handlers
 
     protected override void OnPropertyChanged([CallerMemberName] string propertyName = null)
     {
         base.OnPropertyChanged(propertyName);
 
-        if (propertyName == IsEnabledProperty.PropertyName)
-            PlaceHolderColor = this.IsEnabled ? PlaceHolderColor : Colors.Gray;
-
-        if (propertyName == SelectedPersianDateProperty.PropertyName)
+        switch (propertyName)
         {
-            if (!string.IsNullOrEmpty(SelectedPersianDate))
-            {
-                SetFormattedDate();
-                this.initedView = this.InitPickerView();
-            }
+            case nameof(IsEnabled):
+                PlaceHolderColor = IsEnabled ? PlaceHolderColor : Colors.Gray;
+                break;
+
+            case nameof(SelectedPersianDate):
+                if (!string.IsNullOrEmpty(SelectedPersianDate))
+                {
+                    UpdateFormattedDate();
+                    _ = InitializePickerViewAsync();
+                }
+                break;
         }
     }
 
     private void ucDatePicker_Loaded(object sender, EventArgs e)
     {
-        this.initedView = this.InitPickerView();
+        _ = InitializePickerViewAsync();
     }
 
     #endregion
 
-    #region Method's
+    #region Private Methods
 
-    void SetFormattedDate()
+    private void UpdateFormattedDate()
     {
+        if (string.IsNullOrEmpty(SelectedPersianDate))
+            return;
+
         var dateParts = SelectedPersianDate.Replace('/', DateSeparator).Split(DateSeparator);
 
-        if (dateParts.Length > 0)
-            FormattedDate = DisplayFormat.Replace("yyyy", dateParts[0]).Replace("yy", dateParts[0].Substring(1, 2));
+        if (dateParts.Length == 0)
+            return;
 
-        if (dateParts.Length >= 2)
-            FormattedDate = FormattedDate.Replace("MMM", Enum.GetName(typeof(PersianMonthNames), dateParts[1].ToInt() - 1))
-                .Replace("MM", dateParts[1]).Replace("M", dateParts[1].ToInt().ToString());
-        //.Replace("dddd", App.NativeTools.GetPersianDay(miladiDate))
-        if (dateParts.Length >= 3)
-            FormattedDate = FormattedDate.Replace("dd", dateParts[2])
-                .Replace("d", dateParts[2].ToInt().ToString())
-                .Replace("DD", dateParts[2]);
+        FormattedDate = ApplyYearFormat(DisplayFormat, dateParts);
+        FormattedDate = ApplyMonthFormat(FormattedDate, dateParts);
+        FormattedDate = ApplyDayFormat(FormattedDate, dateParts);
+    }
+
+    private string ApplyYearFormat(string format, string[] dateParts)
+    {
+        if (dateParts.Length <= 0)
+            return format;
+
+        var yearValue = dateParts[0];
+        return format
+            .Replace("yyyy", yearValue)
+            .Replace("yy", yearValue.Length >= 2 ? yearValue.Substring(yearValue.Length - 2) : yearValue);
+    }
+
+    private string ApplyMonthFormat(string format, string[] dateParts)
+    {
+        if (dateParts.Length < 2)
+            return format;
+
+        var monthValue = dateParts[1];
+        var monthNumber = monthValue.ToInt();
+
+        return format
+            .Replace("MMM", Enum.GetName(typeof(PersianMonthNames), monthNumber - 1))
+            .Replace("MM", monthValue)
+            .Replace("M", monthNumber.ToString());
+    }
+
+    private string ApplyDayFormat(string format, string[] dateParts)
+    {
+        if (dateParts.Length < 3)
+            return format;
+
+        var dayValue = dateParts[2];
+        var dayNumber = dayValue.ToInt();
+
+        return format
+            .Replace("dd", dayValue)
+            .Replace("d", dayNumber.ToString())
+            .Replace("DD", dayValue);
+    }
+
+    private async void OnDatePickerTapped(object sender)
+    {
+        if (_pickerView == null)
+        {
+            await InitializePickerViewAsync();
+        }
+
+        _parentPage ??= FindParentContentPage();
+
+        if (_parentPage == null)
+            return;
+
+        IsLoading = true;
+        try
+        {
+            await _parentPage.ShowPopupAsync(_pickerView);
+        }
+        finally
+        {
+            IsLoading = false;
+        }
+    }
+
+    private ContentPage FindParentContentPage()
+    {
+        var parent = Parent;
+        while (parent is not null and not ContentPage)
+        {
+            parent = parent.Parent;
+        }
+
+        return parent as ContentPage;
     }
 
     #endregion
-
-    private async void TapGestureRecognizer_Tapped(object sender)
-    {
-        if (this.view == null)
-            this.initedView.GetAwaiter().GetResult();
-        this.IsLoading = true;
-        if (this.parentPage is null)
-        {
-            IElement contentPage = this.Parent;
-            while (contentPage is not ContentPage)
-                contentPage = contentPage.Parent;
-            this.parentPage = (ContentPage)contentPage;
-        }
-        if (this.parentPage is null || this.parentPage is not ContentPage)
-            return;
-        await parentPage.ShowPopupAsync(this.view);
-        this.IsLoading = false;
-    }
 }

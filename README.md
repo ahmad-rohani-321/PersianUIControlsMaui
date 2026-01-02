@@ -4,39 +4,36 @@
 [![License](https://img.shields.io/github/license/RezaShaban/MauiPersianToolkit)](LICENSE)
 [![Build](https://github.com/RezaShaban/MauiPersianToolkit/actions/workflows/build.yml/badge.svg)](https://github.com/RezaShaban/MauiPersianToolkit/actions)
 
-`MauiPersianTookit` is a comprehensive library for .NET MAUI that provides a variety of Persian language UI controls and components. This library is designed to help developers create modern, cross-platform applications with support for Persian language and right-to-left (RTL) layouts.
+`MauiPersianToolkit` is a comprehensive library for .NET MAUI that provides a variety of Persian language UI controls and components. This library is designed to help developers create modern, cross-platform applications with support for Persian language and right-to-left (RTL) layouts.
 
 ## Features
 
-- **Persian DatePicker**: Single, Multiple, and Range selection modes.
-- **TreeView**: None, Single, and Multiple selection modes.
-- **TabView**: Customizable tab control with multiple tabs.
-- **SlideButton**: Slideable button for interactive UI elements.
-- **Picker**: Single and Multiple selection pickers.
-- **Dialogs**: Alert, Confirm, Prompt, and Custom dialogs for user interactions.
-- **Expander**: Expandable and collapsible container for content.
-- **Entry & Editor**: Enhanced text entry controls with Persian language support.
+- **Persian DatePicker**: Single, Multiple, and Range selection modes with full customization.
+- **TreeView**: Supports None, Single, and Multiple selection modes.
+- **TabView**: Customizable tab control with multiple tabs and dynamic content.
+- **SlideButton**: Interactive slideable button for confirmation actions.
+- **Picker**: Single and Multiple selection pickers with enhanced UI.
+- **Dialogs**: Includes Alert, Confirm, Prompt, and fully Customizable dialogs.
+- **Expander**: Expandable and collapsible container for dynamic content.
+- **Entry & Editor**: Enhanced text entry controls with Persian language and RTL support.
 - **Converters**: Various converters to simplify data binding.
+- **Custom Fonts**: Includes support for Persian fonts like `IranianSans`.
+- **RTL Support**: Full right-to-left layout support for all controls.
 
 ## Installation
 
 You can install the `MauiPersianToolkit` package via NuGet Package Manager or .NET CLI:
 
 ### NuGet Package Manager
+    Install-Package MauiPersianToolkit
 
-```bash
-Install-Package MauiPersianToolkit
-```
 ### .NET CLI
-```basb
-dotnet add package MauiPersianToolkit
-```
+    dotnet add package MauiPersianToolkit
 
 # Getting Started
 
-### Startup
-```basb
-  public static class MauiProgram
+### Startup  
+    public static class MauiProgram
     {
         public static MauiApp CreateMauiApp()
         {
@@ -53,12 +50,9 @@ dotnet add package MauiPersianToolkit
             return builder.Build();
         }
     }
-```
-
 After installing the package, you can start using the controls by adding the appropriate namespaces to your XAML or C# files.
 
 ### Example Usage in XAML
-```basb
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:persian="clr-namespace:MauiPersianToolkit.Controls;assembly=MauiPersianToolkit"
@@ -66,9 +60,7 @@ After installing the package, you can start using the controls by adding the app
 
     <StackLayout>
         <!-- Persian DatePicker Single Selection -->
-        <persian:DatePicker PlaceHolder="تاریخ شروع" SelectedPersianDate="{Binding PersianDate}" 
-CalendarOption="{Binding CalendarOption}" DisplayFormat="yyyy/MM/dd" 
-OnChangeDateCommand="{Binding OnChangeDateCommand}"/>
+        <persian:DatePicker PlaceHolder="تاریخ شروع" SelectedPersianDate="{Binding PersianDate}" CalendarOption="{Binding CalendarOption}" DisplayFormat="yyyy/MM/dd" OnChangeDateCommand="{Binding OnChangeDateCommand}"/>
 
         <!-- TreeView with Multiple Selection -->
         <persianControls:TreeView x:Name="treeView"
@@ -104,137 +96,139 @@ OnChangeDateCommand="{Binding OnChangeDateCommand}"/>
         <persianControls:Editor Placeholder="Enter more detailed text here" />
     </StackLayout>
 </ContentPage>
-```
+
 ### Example Usage in C#
-```basb
-using MauiPersianToolkit;
-
-public partial class MainPage : ContentPage
-{
-    public MainPage()
+    using MauiPersianToolkit;
+    public partial class MainPage : ContentPage
     {
-        InitializeComponent();
-
-        // Using Persian DatePicker with Single Selection
-        PersianDatePicker singleDatePicker = new PersianDatePicker
+        public MainPage()
         {
-            SelectionMode = DatePickerSelectionMode.Single,
-            Format = "yyyy/MM/dd"
-        };
+            InitializeComponent();
 
-        // Using TreeView with Multiple Selection
-        TreeView treeView = new TreeView
-        {
-            SelectionMode = SelectionMode.Multiple
-        };
+            // Using Persian DatePicker with Single Selection
+            PersianDatePicker singleDatePicker = new PersianDatePicker
+            {
+                SelectionMode = DatePickerSelectionMode.Single,
+                Format = "yyyy/MM/dd"
+            };
 
-        // Configuring TabView
-        TabView tabView = new TabView();
-        tabView.Items.Add(new TabViewItem { Title = "Tab 1", Content = new Label { Text = "Content for Tab 1" } });
-        tabView.Items.Add(new TabViewItem { Title = "Tab 2", Content = new Label { Text = "Content for Tab 2" } });
+            // Using TreeView with Multiple Selection
+            TreeView treeView = new TreeView
+            {
+                SelectionMode = SelectionMode.Multiple
+            };
 
-        // Using SlideButton
-        SlideButton slideButton = new SlideButton
-        {
-            Text = "Slide to Confirm"
-        };
+            // Configuring TabView
+            TabView tabView = new TabView();
+            tabView.Items.Add(new TabViewItem { Title = "Tab 1", Content = new Label { Text = "Content for Tab 1" } });
+            tabView.Items.Add(new TabViewItem { Title = "Tab 2", Content = new Label { Text = "Content for Tab 2" } });
 
-        // Configuring Picker with Multiple Selection
-        Picker multiPicker = new Picker
-        {
-            SelectionMode = PickerSelectionMode.Multiple
-        };
+            // Using SlideButton
+            SlideButton slideButton = new SlideButton
+            {
+                Text = "Slide to Confirm"
+            };
 
-        // Using Expander
-        Expander expander = new Expander
-        {
-            IsExpanded = false,
-            Header = "Click to expand",
-            Content = new Label { Text = "This is the expandable content" }
-        };
+            // Configuring Picker with Multiple Selection
+            Picker multiPicker = new Picker
+            {
+                SelectionMode = PickerSelectionMode.Multiple
+            };
 
-        // Adding controls to the layout
-        var stackLayout = new StackLayout
-        {
-            Children = { singleDatePicker, treeView, tabView, slideButton, multiPicker, expander }
-        };
+            // Using Expander
+            Expander expander = new Expander
+            {
+                IsExpanded = false,
+                Header = "Click to expand",
+                Content = new Label { Text = "This is the expandable content" }
+            };
 
-        this.Content = stackLayout;
+            // Adding controls to the layout
+            var stackLayout = new StackLayout
+            {
+                Children = { singleDatePicker, treeView, tabView, slideButton, multiPicker, expander }
+            };
+
+            this.Content = stackLayout;
+        }
     }
-}
-```
+
 ## Dialogs
 
 MauiPersianToolkit includes several types of dialogs:
 
-Alert Dialog: Simple message dialog.
-Confirm Dialog: Dialog with confirmation options.
-Prompt Dialog: Dialog to capture user input.
-Custom Dialog: Fully customizable dialog to suit your needs.
-```basb
-// Show Alert Dialog
-dialogService.Alert("This is an alert message.");
+- ``Alert Dialog:`` Simple message dialog.
 
-// Show Confirm Dialog
-dialogService.Confirm(new ConfirmConfig()
-{
-    Title = "Remove Item",
-    AcceptText = "Yes",
-    CancelText = "No",
-    Message = "Are you sure you want to proceed?",
-    Icon = MessageIcon.QUESTION,
-    OnAction = new Action<bool>((arg) => {
-        if(!arg) return;
-    }),
-});
+- ``Confirm Dialog:`` Dialog with confirmation options.
 
-// Show Prompt Dialog
-dialogService.Prompt(new PromptConfig()
-{
-    Title = "Regiser Name",
-    AcceptText = "Register",
-    CancelText = "Cancel",
-    Message = "Enter your name:",
-    Placeholder = "name",
-    Icon = MessageIcon.QUESTION,
-    OnAction = new Action<PromptResult>((arg) => {
-        if(!arg.IsOk) return;
-    }),
-});
+- ``Prompt Dialog:`` Dialog to capture user input.
 
-// Custom Dialog
-dialogService.CustomDialog(new CustomDialogConfig()
-{
-    Title = "Register Information",
-    AcceptText = "Register",
-    CancelText = "Cancle",
-    Message = "Enter Your Info",
-    Icon = MessageIcon.QUESTION,
-    AcceptIcon = MessageIcon.QUESTION,
-    Cancelable = true,
-    CancelIcon = MessageIcon.ERROR,
-    DialogColor = Colors.DeepPink,
-    CloseWhenBackgroundIsClicked = true,
-    CloseAfterAccept = true,
-    OnAction = new Action<bool>((arg) => { }),
-    Content = new StackLayout()
+- ``Custom Dialog:`` Fully customizable dialog to suit your needs.
+
+-
+
+    // Show Alert Dialog
+    dialogService.Alert("This is an alert message.");
+
+    // Show Confirm Dialog
+    dialogService.Confirm(new ConfirmConfig()
     {
-        Children =
+        Title = "Remove Item",
+        AcceptText = "Yes",
+        CancelText = "No",
+        Message = "Are you sure you want to proceed?",
+        Icon = MessageIcon.QUESTION,
+        OnAction = new Action<bool>((arg) => {
+            if(!arg) return;
+        }),
+    });
+
+    // Show Prompt Dialog
+    dialogService.Prompt(new PromptConfig()
+    {
+        Title = "Regiser Name",
+        AcceptText = "Register",
+        CancelText = "Cancel",
+        Message = "Enter your name:",
+        Placeholder = "name",
+        Icon = MessageIcon.QUESTION,
+        OnAction = new Action<PromptResult>((arg) => {
+            if(!arg.IsOk) return;
+        }),
+    });
+
+    // Custom Dialog
+    dialogService.CustomDialog(new CustomDialogConfig()
+    {
+        Title = "Register Information",
+        AcceptText = "Register",
+        CancelText = "Cancle",
+        Message = "Enter Your Info",
+        Icon = MessageIcon.QUESTION,
+        AcceptIcon = MessageIcon.QUESTION,
+        Cancelable = true,
+        CancelIcon = MessageIcon.ERROR,
+        DialogColor = Colors.DeepPink,
+        CloseWhenBackgroundIsClicked = true,
+        CloseAfterAccept = true,
+        OnAction = new Action<bool>((arg) => { }),
+        Content = new StackLayout()
         {
-            new EntryView(){ PlaceHolder = "Name" },
-            new MauiPersianToolkit.Controls.DatePicker(){ PlaceHolder = "BirthDate" }
+            Children =
+            {
+                new EntryView(){ PlaceHolder = "Name" },
+                new MauiPersianToolkit.Controls.DatePicker(){ PlaceHolder = "BirthDate" }
+            }
         }
-    }
-});
-```
+    });
 
 ## Converters
 This library also includes several converters to assist with data binding in your MAUI applications.
 
 ### Example Usage of Converters
-```basb
-<Label Text="{Binding Date, Converter={StaticResource PersianDateConverter}}" />
-```
+
+    <Label Text="{Binding Date, Converter={StaticResource PersianDateConverter}}" />
+    
 ## Customization
 All controls in MauiPersianToolkit are designed to be easily customizable to match the look and feel of your application. You can adjust properties such as colors, fonts, and behaviors through XAML or C#.
 
